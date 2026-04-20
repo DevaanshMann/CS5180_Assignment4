@@ -21,7 +21,6 @@ def preprocess(text):
     filtered = [token for token in tokens if token not in ENGLISH_STOP_WORDS]      # 2. remove stopwords only
     return filtered                                                                # 3. return the filtered tokens
 
-
 # ---------------------------------------------------------
 # 1. Load the input files
 # ---------------------------------------------------------
@@ -34,7 +33,6 @@ def preprocess(text):
 docs_df = pd.read_csv("docs.csv")
 queries_df = pd.read_csv("queries.csv")
 relevance_df = pd.read_csv("relevance_judgments.csv")
-
 
 # ---------------------------------------------------------
 # 2. Build the BM25 index for the documents
@@ -51,7 +49,6 @@ doc_ids = docs_df["doc_id"].tolist()
 
 # Create the BM25 model
 bm25 = BM25Okapi(tokenized_docs)
-
 
 # ---------------------------------------------------------
 # 3. Process each query and compute AP values
@@ -82,8 +79,8 @@ for _, row in queries_df.iterrows():
     ranked_doc_ids = [doc_ids[i] for i in ranked_indices]
 
     # 4. Retrieve the relevant documents for this query
-    relevant_set = set(
-        relevance_df[(relevance_df["query_id"] == query_id) & (relevance_df["judgment"] == "R")]["doc_id"])
+    relevant_set = set(relevance_df[(relevance_df["query_id"] == query_id)
+                                    & (relevance_df["judgment"] == "R")]["doc_id"])
 
 
     # -----------------------------------------------------
@@ -116,14 +113,12 @@ for _, row in queries_df.iterrows():
     ap = precision_sum / num_relevant
     ap_scores[query_id] = ap
 
-
 # ---------------------------------------------------------
 # 5. Sort queries by AP in descending order
 # ---------------------------------------------------------
 # --> add your Python code here
 
 sorted_queries = sorted(ap_scores.items(), key=lambda x: x[1], reverse=True)
-
 
 # ---------------------------------------------------------
 # 6. Print the sorted queries and their AP scores
